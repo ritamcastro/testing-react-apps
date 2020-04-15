@@ -8,22 +8,28 @@ import Login from '../../components/login-submission'
 // 🐨 The next lines are here to silence a warning that you'll be fixing
 // so go ahead and delete these lines.
 // 💣 delete start
-beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {})
-  jest.spyOn(console, 'warn').mockImplementation(() => {})
-})
+// beforeAll(() => {
+//   jest.spyOn(console, 'error').mockImplementation(() => {})
+//   jest.spyOn(console, 'warn').mockImplementation(() => {})
+// })
 
-afterAll(() => {
-  console.error.mockRestore()
-  console.warn.mockRestore()
-})
+// afterAll(() => {
+//   console.error.mockRestore()
+//   console.warn.mockRestore()
+// })
 // 💣 delete end
 
 test('submitting the form calls onSubmit with username and password', async () => {
   // here we want to tell jest that the next time window.fetch is called, it
   // should return a promise that resolves to a value we specify:
   // 🐨 using `mockResolvedValueOnce`, have window.fetch return this next time
-  // it's called: `{json: () => Promise.resolve({token: 'fake-token'})}`
+ //const window = jest.fn().mockImplementationOnce({json: () => Promise.resolve({token: 'fake-token'})});
+ window.fetch.mockResolvedValueOnce({
+  json: () => Promise.resolve({token: 'fake-token'}),
+})
+
+ 
+ // it's called: `{json: () => Promise.resolve({token: 'fake-token'})}`
   // 📜 https://jestjs.io/docs/en/mock-function-api#mockfnmockresolvedvalueoncevalue
 
   render(<Login />)
@@ -37,6 +43,8 @@ test('submitting the form calls onSubmit with username and password', async () =
   // as soon as the user hits submit, we render a spinner to the screen. That
   // spinner has an aria-label of "loading..." for accessibility purposes, so
   // 🐨 assert that there is an element labeled "loading" in the document
+  await screen.findByLabelText("loading...")
+
   // 💰 you'll need to use a `find*` query variant like findByLabelText (so you'll want to use `await`)
   // 📜 https://testing-library.com/docs/dom-testing-library/api-queries#findby
 
